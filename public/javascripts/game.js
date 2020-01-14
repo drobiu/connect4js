@@ -35,9 +35,10 @@ function updateboard() {
                 if (boardRotated[i][j] != undefined) {
                     var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
                     thediv.prepend(newLine);
-                    $('#ball' + i + j).css({ 'top': (7 - i) * 60 + "px", "left": j * 60 + "px" });
+                    var width = $(document).width();
+                    $('#ball' + i + j).css({ 'top': (7 - i) * 60 + "px", "left": width/2 - 7*30 + (j * 60) + "px" });
                     if (boardRotated[i][j] == 'y') {
-                        $('#ball' + i + j).css({ 'background-color': "yellow"});
+                        $('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
                     }
                 }
             }

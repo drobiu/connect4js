@@ -3,11 +3,46 @@
     <head>
         <title>Connect 4 sie bitte!</title>
         <link href="https://fonts.googleapis.com/css?family=Pacifico|Public+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/reset.css">
         <link href="/stylesheets/game.css" rel="stylesheet" type="text/css">
         <script language="javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script language="javascript" src="/javascripts/game.js"></script>
     </head>
     <body>
+
+		<header>
+			<div id="top-bar">
+				<div>
+					<div id="back-button" class="hide">
+						<button type="button" onclick="window.location.href = 'index.html';">← Back</button>
+					</div>
+				</div>
+			</div>
+        </header>
+        <main>
+			<div id="game-screen" class="screen" style="padding: 0px;">
+				<div class="game-background">
+					<div id="board-container" style="height: 120; width: 140px;">
+						<div id="board">
+							<div id="moved-discs"></div>
+							<div id="board-form"></div>
+							<div id="selector" class="hide"></div>
+							<div id="columns" class="enabled" style="cursor: default;">
+								<div id="column-1" class="column"></div>
+								<div id="column-2" class="column"></div>
+								<div id="column-3" class="column"></div>
+								<div id="column-4" class="column"></div>
+								<div id="column-5" class="column"></div>
+								<div id="column-6" class="column"></div>
+								<div id="column-7" class="column"></div>
+							</div>
+						</div>
+						<div id="info">
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
         <div>
             <form action="/color" method="post">
                 <label for="color">Color </label><input type="text" name="color" />
@@ -16,5 +51,12 @@
             </form>
             <div id="board"></div>
         </div>
+        <footer>
+			<div class="contact-container">
+				<div class="contact" style="font-size: 50%;">
+					<p>This game was created by A.Buszydlik and K.Dobiczek for the course of CSE1500</p>
+				</div>
+			</div>
+		</footer>
     </body>
 </html>
