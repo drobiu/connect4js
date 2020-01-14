@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Connect 4 sie bitte!</title>
-        <link href="https://fonts.googleapis.com/css?family=Pacifico|Public+Sans&display=swap" rel="stylesheet">
-        <link href="../style/game.css" rel="stylesheet" type="text/css">
-        <script language="javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script language="javascript" src="../javascript/game.js"></script>
-    </head>
-    <body>
-        <div>
-            <form action="/color/" method="post">
-                <label for="color">Message </label><input type="text" name="color" />
-                <label for="row">Nick </label><input type="text" name="row"/>
-                <button type="submit">Post</button> 
-            </form>
-        </div>
-    </body>
+	<head>
+		<title>Connect 4</title>
+		<link rel="stylesheet" type="text/css" href="reset.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/index_style.css">
+		<link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<header>
+			<div id="title-box">
+				<div id="title">
+					<h1>Connect 4</h1>
+				</div>
+			</div>
+		</header>
+		<main>
+			<div id="stats">
+				<p id="stats-1" style="background-color: white;">Stat1</p>
+				<p id="stats-2" style="background-color: white;">Stat2</p>
+				<p id="stats-3" style="background-color: white;">Stat3</p>
+			</div>
+			<div>
+				<button type="button" class="block" onclick="window.location.href = 'game.html';">Play</button>
+			</div>
+		</main>
+		<footer>
+			<div class="contact-container">
+				<div class="contact" style="font-size: 50%;">
+					<p>This game was created by A.Buszydlik and K.Dobiczek for the course of CSE1500</p>
+				</div>
+			</div>
+		</footer>
+	</body>
 </html>
