@@ -1,15 +1,49 @@
 
 /* 
-     * Update list of suggestions and corresponding actions
+     * Update list of board and corresponding actions
      */
-function updateSuggestions() {
+function updateboard() {
     // AJAX request to obtain suggestion list
-    $.getJSON("/suggestions").done(function (suggestions) {
+    $.getJSON("/board").done(function (board) {
         // Select the <div> that contains the suggestion list and clear it
-        var thediv = $("#suggestions");
+        var thediv = $("#board");
         thediv.empty();
 
-        console.log(suggestions);
+        //console.log(board);
+
+        var boardRotated = [];
+
+        for (let i = 0; i < board.length; i++) {
+            boardRotated.push([]);
+            for (let j = 0; j < board.length; j++) {
+                if (board[j][i] != undefined) boardRotated[i][j] = board[j][i];
+            }
+        }
+
+        // for (let i = 0; i < board.length; i++) {
+        //     var newLine = '<p id="row' + i + '" class="row">|';
+        //     for (let j = 0; j < board.length; j++) {
+        //         if (boardRotated[i][j] != undefined) newLine += boardRotated[i][j] + ' ';
+        //         else newLine += '. ';
+        //     }
+        //     newLine += '|</p>'
+        //     thediv.prepend(newLine);
+        // }
+
+        for (let i = 0; i < boardRotated.length; i++) {
+            for (let j = 0; j < boardRotated.length; j++) {
+                if (boardRotated[i][j] != undefined) {
+                    var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
+                    thediv.prepend(newLine);
+                    $('#ball' + i + j).css({ 'top': (7 - i) * 60 + "px", "left": j * 60 + "px" });
+                    if (boardRotated[i][j] == 'y') {
+                        $('#ball' + i + j).css({ 'background-color': "yellow"});
+                    }
+                }
+            }
+        }
+
+        console.log(boardRotated);
     });
 }
 
@@ -24,7 +58,7 @@ function postSuggestion(event) {
         row: $('input[name=row]').val()
     }
 
-    $.post('/color/', sug).done(updateSuggestions);
+    $.post('/color/', sug).done(updateboard);
 }
 
 /*
@@ -52,12 +86,12 @@ function downvote(sid) {
 }
 
 // When the document is ready:
-// - First call to update the list of suggestions
+// - First call to update the list of board
 // - Set timer to refresh every 5 seconds
 // - Link the form to our own function postSuggestion
 $(document).ready(function () {
-    updateSuggestions();
-    window.setInterval(updateSuggestions, 5000);
+    updateboard();
+    window.setInterval(updateboard, 5000);
 
     $("form").submit(postSuggestion);
 });

@@ -110,7 +110,7 @@ app.post('/color/', function (req, res) {
 	res.end();
 });
 
-app.get('/suggestions/', function (req, res) {
+app.get('/board/', function (req, res) {
 	res.json(board);
 	res.end();
 });
