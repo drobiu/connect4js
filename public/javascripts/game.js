@@ -1,4 +1,4 @@
-
+var user = 'y';
 /* 
      * Update list of board and corresponding actions
      */
@@ -30,28 +30,66 @@ function updateboard() {
         //     thediv.prepend(newLine);
         // }
 
-        for (let i = 0; i < boardRotated.length; i++) {
+        for (let i = 0; i < boardRotated.length - 1; i++) {
             for (let j = 0; j < boardRotated.length; j++) {
                 if (boardRotated[i][j] != undefined) {
                     var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
                     thediv.prepend(newLine);
+                    var height = $(document).height();
                     var width = $(document).width();
-                    $('#ball' + i + j).css({ 'top': (7 - i) * 60 + "px", "left": width/2 - 7*30 + (j * 60) + "px" });
+                    $('#ball' + i + j).css({ 'top': height/2 - 7*30 + (7 - i) * 60 + "px", "left": width/2 - 7*30 + (j * 60) + "px" });
                     if (boardRotated[i][j] == 'y') {
                         $('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
+                    
                     }
                 }
             }
         }
 
-        console.log(boardRotated);
+        var d = $(document);
+            $('#boardBackground').css({ 'top': d.height()/2-118 + 'px', 'left' : d.width()/2-237 + 'px'});
+
+        var leftBase = d.width()/2-216;
+        var topBase = d.height()/2-118;
+
+        for (let i = 0; i < 7; i++) {
+            $('#column-' + i).css({'left' : leftBase + 60*i + 'px', 'top' : topBase + 'px'});
+        }
+
+        for (let i = 0; i < 7; i++) {
+            if (board[i].length >= 6) {
+                $('#column-' + i).click(false);
+                $('#column-' + i).css({'visibility' : 'hidden'});
+            }
+        }
+
+        console.log(leftBase);
     });
+}
+
+function postDisk(event) {
+    var cid = event.target.id.slice(-1);
+    console.log(cid);
+    postDUID(user, cid);
 }
 
 /*
  * Post a new suggestion and refresh list
  */
-function postSuggestion(event) {
+function postDUID(user, col) {
+    event.preventDefault();
+
+    var sug = {
+        color: user,
+        row: col
+    }
+
+    $.post('/color/', sug).done(updateboard);
+}
+/*
+ * Post a new suggestion and refresh list
+ */
+function postDUI(event) {
     event.preventDefault();
 
     var sug = {
@@ -79,20 +117,18 @@ function upvote(sid) {
     //$( "#" ).getElementById('s' + sid).onclick = function changeContent() {};
 }
 
-/*
- * Downvote an existing suggestion
- */
-function downvote(sid) {
-    // STEP 9
-}
-
 // When the document is ready:
 // - First call to update the list of board
-// - Set timer to refresh every 5 seconds
+// - Set timer to refresh every 1 seconds
 // - Link the form to our own function postSuggestion
 $(document).ready(function () {
     updateboard();
-    window.setInterval(updateboard, 5000);
+    window.setInterval(updateboard, 1000);
 
-    $("form").submit(postSuggestion);
+   // $(document).getElementsByClassName('column').addEventListener('click', function() {console.log('click')});
+    $('.column').click(function() {postDisk(event)});
+
+    window.addEventListener("resize", function(){updateboard()}, true);
+
+    $("form").submit(postDUI);
 });

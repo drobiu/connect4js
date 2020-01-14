@@ -1,11 +1,10 @@
 html, body {
-    background: lightcyan;
     width: 100%;
     font-family: 'Public Sans', sans-serif;
     padding: 0;
     font-size: medium;
     overflow: hidden;
-    background-color: #AD8CFF;
+    background-color: rgba(214, 246, 255, 0.541);
     }
 
 h1 {
@@ -28,7 +27,7 @@ header button {
 	text-align: center;
 	margin-top: 1%;
     margin-left: 1%;
-    border-radius: 20%;
+    border-radius: 40%;
 }
 
 header button:hover {
@@ -45,6 +44,34 @@ header button:hover {
     height: 50px;
     width: 50px;
     border-radius: 50%;
+    z-index: 2;
+}
+
+#boardBackground {
+    position: absolute;
+    height: 405px;
+    width: 465px;
+    z-index: 1;
+}
+
+/*#boardBackground {
+    margin-left: 25%;
+    margin-bottom: 5%;
+    width: 460px;
+    height: 400px;
+    
+} */
+
+.column {
+    position: absolute;
+    height: 405px;
+    width: 60px;
+    z-index: 3;
+}
+
+.column:hover {
+    opacity: 20%;
+    background: radial-gradient(transparent, white);
 }
 
 footer {

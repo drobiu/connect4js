@@ -1,0 +1,65 @@
+/*Used font*/
+@import url('https://fonts.google.com/specimen/Lato?selection.family=Lato');
+
+/*Global vars in root*/
+/*:root {
+
+}*/
+
+html, body {
+	width: 100%;
+	overflow: hidden;
+	background-color: #AD8CFF;
+	font-family: 'PT Sans', sans-serif;
+}
+
+header #title {
+	font-size: 7vw;
+	text-align: center;
+	background-color: white;
+	width: 90%;
+	margin-top: 3%;
+	margin-left: 5%;
+}
+
+main #stats-1, #stats-2, #stats-3 {
+	font-size: 3vw;
+	text-align: center;
+	margin-top: 3%;
+	margin-left: 5%;
+	float: left;
+	width: 26.67%;
+}
+
+main #stats:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.block {
+	display: block;
+	width: 50%;
+	min-height: 150px;
+	border: none;
+	background-color: white;
+	padding: 10% 20%;
+	font-size: 3vw;
+	cursor: pointer;
+	text-align: center;
+	margin-top: 10%;
+	margin-left: 25%;
+}
+
+.block:hover {
+	color: grey;
+}
+
+footer {
+	position: fixed;
+	bottom: 1%;
+	width: 100%;
+	font-size: x-large;
+	text-align: center;
+	background-color: magenta;
+}
