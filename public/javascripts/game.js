@@ -47,7 +47,7 @@ function updateboard() {
         }
 
         var d = $(document);
-            $('#boardBackground').css({ 'top': d.height()/2-118 + 'px', 'left' : d.width()/2-237 + 'px'});
+            $('#boardBackground').css({ 'top': d.height()/2-118 + 'px', 'left' : d.width()/2-236 + 'px'});
 
         var leftBase = d.width()/2-216;
         var topBase = d.height()/2-118;

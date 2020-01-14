@@ -18,16 +18,16 @@ form {
 }
 
 header button {
-	width: 14%;
-	border: none;
-	background-color: white;
-    padding: 2% 5%;
+    font-family: pacifico;
+    min-width: 100px;
+    min-height: 100px;
+	background-color: #2CD583;
 	font-size: 2vw;
 	cursor: pointer;
 	text-align: center;
 	margin-top: 1%;
     margin-left: 1%;
-    border-radius: 40%;
+    border-radius: 50%;
 }
 
 header button:hover {
