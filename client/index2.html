@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<link href="https://fonts.googleapis.com/css?family=Pacifico|Public+Sans&display=swap" rel="stylesheet">
+    	<link href="style.css" rel="stylesheet" type="text/css">
+		<script language="javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script language="javascript">
+			/* 
+			 * Update list of suggestions and corresponding actions
+			 */
+			function updateSuggestions() {				
+				// AJAX request to obtain suggestion list
+				$.getJSON("/suggestions").done(function(suggestions) {
+					// Select the <div> that contains the suggestion list and clear it
+					var thediv = $("#suggestions");
+					thediv.empty();
+
+					// For each suggestion, build the <p> element and append
+					$.each(suggestions, function(i, s) {
+						var newsug = '<p id="s' + i + '">' + (i+1) + '. ' + s.message + ' (' +
+							s.nick + ') votes: <span class="votes">' + s.voteCount + '</span>';
+						// If this is not the owner, show the up/downvote links
+						if(!s.owner) {
+							newsug += ' | <a class="action" href="#" onclick="';
+							// make link +1 or -1 depending on whether user already voted or not
+							if(s.voted)
+								newsug += 'downvote(' + i + ')">-1</a>';
+							else
+								newsug += 'upvote(' + i + ')">+1</a>';
+						}
+						newsug += '</p>';
+
+						// prepend the new suggestion (depends on the order returned by server)
+						thediv.prepend(newsug);
+					});
+				});
+			}
+
+			/*
+			 * Post a new suggestion and refresh list
+			 */
+			function postSuggestion(event) {
+				event.preventDefault();
+				
+				var sug = {
+					message: $('input[name=message]').val(),
+					nick: $('input[name=nick]').val()
+				}
+
+				$.post('/suggestions/', sug).done(updateSuggestions);
+			}
+
+			/*
+			 * Upvote an existing suggestion
+			 */
+			function upvote(sid) {
+				$.post('/votes/'+ sid).done(function (res) {
+					var currentVote = $("#s" + sid + " span.votes")[0];
+					currentVote.innerHtml = parseInt(currentVote.innerHtml)+1;
+					
+					var link = $("#s"+sid+" a.action")[0];
+					link.innerHtml = '-1';
+					link.onclick(function (event) {
+						
+					});
+				});
+				//$( "#" ).getElementById('s' + sid).onclick = function changeContent() {};
+			}
+
+			/*
+			 * Downvote an existing suggestion
+			 */
+			function downvote(sid) {
+				// STEP 9
+			}
+
+			// When the document is ready:
+			// - First call to update the list of suggestions
+			// - Set timer to refresh every 5 seconds
+			// - Link the form to our own function postSuggestion
+			$(document).ready(function() {
+				updateSuggestions();
+				window.setInterval(updateSuggestions, 5000);
+
+				$("form").submit(postSuggestion);
+			});
+		</script>
+	</head>
+	<body>
+		<h2>New Suggestion</h2>
+		<div>
+			<form action="/suggestions" method="post">
+				<label for="message">Message </label><input type="text" name="message" />
+				<label for="nick">Nick </label><input type="text" name="nick"/>
+				<button type="submit">Post</button> 
+			</form>
+		</div>
+		<h2>Current Suggestions</h2>
+		<div id="suggestions"></div>
+	</body>
+</html>
