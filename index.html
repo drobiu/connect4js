@@ -3,41 +3,25 @@
 	<head>
 		<title>Connect 4</title>
 		<link rel="stylesheet" type="text/css" href="reset.css">
-		<link rel="stylesheet" type="text/css" href="style.css">
-		<div style="background-image: url('background.jpg'); width: 100%">
+		<link rel="stylesheet" type="text/css" href="index_style.css">
+		<link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<header>
-			<div id="top-bar">
-				<div>
-					<div id="back-button" class="hide">
-						<span>← Back</span>
-					</div>
+			<div id="title-box">
+				<div id="title">
+					<h1>Connect 4</h1>
 				</div>
 			</div>
 		</header>
 		<main>
-			<div id="game-screen" class="screen" style="padding: 0px;">
-				<div class="game-background">
-					<div id="board-container" style="height: 120; width: 140px;">
-						<div id="board">
-							<div id="moved-discs"></div>
-							<div id="board-form"></div>
-							<div id="selector" class="hide"></div>
-							<div id="columns" class="enabled" style="cursor: default;">
-								<div id="column-1" class="column"></div>
-								<div id="column-2" class="column"></div>
-								<div id="column-3" class="column"></div>
-								<div id="column-4" class="column"></div>
-								<div id="column-5" class="column"></div>
-								<div id="column-6" class="column"></div>
-								<div id="column-7" class="column"></div>
-							</div>
-						</div>
-						<div id="info">
-						</div>
-					</div>
-				</div>
+			<div id="stats">
+				<p id="stats-1" style="background-color: white;">Stat1</p>
+				<p id="stats-2" style="background-color: white;">Stat2</p>
+				<p id="stats-3" style="background-color: white;">Stat3</p>
+			</div>
+			<div>
+				<button type="button" class="block" onclick="window.location.href = 'game.html';">Play</button>
 			</div>
 		</main>
 		<footer>
