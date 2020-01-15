@@ -9,10 +9,19 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var bodyParser = require('body-parser');
+var websocket = require('ws');
+
+var router = express.Router();
+
+var app = express();
 
 module.exports = app;
 
-var app = express();
+
+
+
+
+var port = 3000;
 
 var size = 7;
 
@@ -80,11 +89,65 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+//app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+/* GET home page */
+// router.get("/splash", function (req, res) {
+//     res.sendFile("splash.html", { root: "./public" });
+// });
+
+// router.get("/home", function (req, res) {
+//     res.sendFile("splash.html", { root: "./public" });
+// });
+
+/* Pressing the 'PLAY' button, returns this page */
+router.get("/play", function (req, res) {
+    res.sendFile("game.html", { root: "./public" });
+});
+
+app.get("/play", router);
+
+// router.get("/", (req, res) => {
+//     res.render('splash.ejs', {});
+// });
+
+app.get("/", (req, res) => {
+    res.render('splash.ejs', {});
+});
+
+var server = http.createServer(app);
+const wss = new websocket.Server({ server });
+
+var conID = 0;
+
+var websockets = {};
+
+wss.on("connection", function connection(ws) {
+    let connection = ws;
+    connection.id = conID++;
+
+    console.log(
+        "Player %s placed in game",
+        connection.id,
+    );
+
+    connection.on('message', function incoming(message) {
+        var jmessage = JSON.parse(message);
+        if (jmessage.type == 'postDisk') {
+        board[jmessage.column].push(jmessage.user);
+        connection.send(JSON.stringify(board));
+        } else {
+            connection.send(JSON.stringify(board));
+        }
+    });
+
+
+    
+});
 
 // //catch 404 and forward to error handler
 // app.use(function(req, res, next) {
@@ -103,26 +166,28 @@ app.use(bodyParser.json());
 // });
 
 
-app.post('/color/', function (req, res) {
-    board[req.body.row].push(req.body.color);
-    if (req.body.color == 'reset') {
-        board = generateBoard();
-    }
-    for (let i = 0; i < size; i++) {
-        console.log(board[i]);
-    }
-    console.log(checkBoard(board));
-    res.end();
-});
+// app.post('/color/', function (req, res) {
+//     board[req.body.row].push(req.body.color);
+//     if (req.body.color == 'reset') {
+//         board = generateBoard();
+//     }
+//     for (let i = 0; i < size; i++) {
+//         console.log(board[i]);
+//     }
+//     console.log(checkBoard(board));
+//     res.end();
+// });
 
-app.get('/board/', function (req, res) {
-    res.json(board);
-    res.end();
-});
+// app.get('/board/', function (req, res) {
+//     res.json(board);
+//     res.end();
+// });
 
-// Create HTTP server and listen to port 3000
-http.createServer(app).listen(3000, function () {
-    console.log("# Listening to port 3000...");
-});
+// // Create HTTP server and listen to port 3000
+// http.createServer(app).listen(3000, function () {
+//     console.log("# Listening to port 3000...");
+// });
 
-console.log(checkBoard(board));
+// console.log(checkBoard(board));
+
+server.listen(port);
