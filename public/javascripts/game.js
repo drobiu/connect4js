@@ -39,7 +39,8 @@ function updateboard() {
                     var width = $(document).width();
                     $('#ball' + i + j).css({ 'top': height/2 - 7*30 + (7 - i) * 60 + "px", "left": width/2 - 7*30 + (j * 60) + "px" });
                     if (boardRotated[i][j] == 'y') {
-                        $('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
+                        //$('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
+                        $('#ball' + i + j).css({ 'background' : "url('../images/lama_p2.png')", 'background-size' : '100% 100%'});
                     
                     }
                 }

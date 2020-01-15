@@ -20,14 +20,15 @@ form {
 header button {
     font-family: pacifico;
     min-width: 100px;
-    min-height: 100px;
+    min-height: 40px;
 	background-color: #2CD583;
 	font-size: 2vw;
 	cursor: pointer;
 	text-align: center;
 	margin-top: 1%;
     margin-left: 1%;
-    border-radius: 50%;
+    background: url('/../images/back_button.png');
+	background-size: 100% 100%;
 }
 
 header button:hover {
@@ -40,11 +41,15 @@ header button:hover {
 
 .ball {
     position: absolute;
-    background: radial-gradient(red, #C31616);
+    /*background: radial-gradient(red, #C31616);*/
     height: 50px;
     width: 50px;
     border-radius: 50%;
     z-index: 2;
+    background-image: url('/../images/lama_p1.png');
+    background-size: 100% 100%;
+    animation-name: example;
+    animation-duration: 0.5s;
 }
 
 #boardBackground {
@@ -83,4 +88,9 @@ footer {
     background-color: #A87C29;
     color: white;
     text-align: center;
+  }
+
+  @keyframes example {
+    0%   {left:0px; top:0px;}
+    100% {left:100px; top:100px;}
   }
