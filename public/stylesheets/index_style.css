@@ -9,17 +9,23 @@
 html, body {
 	width: 100%;
 	overflow: hidden;
-	background-color: #AD8CFF;
+	background-color: rgb(214, 246, 255);
 	font-family: 'PT Sans', sans-serif;
 }
 
-header #title {
+#title {
 	font-size: 7vw;
+	font-family: pacifico;
 	text-align: center;
-	background-color: white;
-	width: 90%;
+	/*background-color: white;*/
+	width: 102%;
 	margin-top: 3%;
-	margin-left: 5%;
+	margin-left: -1%;
+	animation: swivel ease-in-out 2s infinite alternate;
+}
+
+#title h1 {
+	display: inline;
 }
 
 main #stats-1, #stats-2, #stats-3 {
@@ -39,8 +45,7 @@ main #stats:after {
 
 .block {
 	display: block;
-	width: 50%;
-	min-height: 150px;
+	width: 40%;
 	border: none;
 	background-color: white;
 	padding: 10% 20%;
@@ -48,11 +53,17 @@ main #stats:after {
 	cursor: pointer;
 	text-align: center;
 	margin-top: 10%;
-	margin-left: 25%;
+	margin-left: 30%;
+	background: url('/../images/play_button.png');
+	background-size: 100% 100%;
 }
 
 .block:hover {
-	color: grey;
+    opacity: 90%;
+}
+
+.block:hover {
+	animation: expand ease-in-out 2s infinite alternate;
 }
 
 footer {
@@ -62,4 +73,25 @@ footer {
 	font-size: x-large;
 	text-align: center;
 	background-color: magenta;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 30px;
+    background-color: #A87C29;
+    color: white;
+    text-align: center;
+  }
+
+@keyframes swivel {
+	0%{transform: rotate(-10deg);}
+	100% {transform: rotate(10deg);}
+}
+
+@keyframes expand {
+	0%{transform: scale(90%);}
+	100% {transform: scale(110%);}
 }

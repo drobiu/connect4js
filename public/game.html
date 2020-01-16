@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/reset.css">
         <link href="/stylesheets/game.css" rel="stylesheet" type="text/css">
         <script language="javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script language="javascript" src="/javascripts/game.js"></script>
+        <script language="javascript" src="/javascripts/client.js"></script>
     </head>
     <body>
 
@@ -14,12 +14,13 @@
 			<div id="top-bar">
 				<div>
 					<div id="back-button" class="hide">
-						<button type="button" onclick="window.location.href = 'index.html';">← Back</button>
+						<button type="button" onclick="window.location.href = '/';"></button>
 					</div>
 				</div>
 			</div>
         </header>
         <main>
+			<h1 id="status"></h1>
 			<div id="game-screen" class="screen" style="padding: 0px;">
 				<div class="game-background">
 					<div id="board-container">
@@ -44,11 +45,6 @@
 			</div>
 		</main>
         <div>
-            <form action="/color" method="post">
-                <label for="color">Color </label><input type="text" name="color" />
-                <label for="row">Row </label><input type="text" name="row"/>
-                <button type="submit">Post</button> 
-            </form>
             <div id="board"></div>
             <img id="boardBackground" src="/images/board.png">
             
