@@ -2,17 +2,15 @@ var user = 'y';
 if (Math.random() > 0.5) {
     user = 'r';
 }
+
+var board;
 /* 
      * Update list of board and corresponding actions
      */
 function updateboard(board) {
-    // AJAX request to obtain suggestion list
-
     // Select the <div> that contains the suggestion list and clear it
     var thediv = $("#board");
     thediv.empty();
-
-    //console.log(board);
 
     var boardRotated = [];
 
@@ -23,16 +21,6 @@ function updateboard(board) {
         }
     }
 
-    // for (let i = 0; i < board.length; i++) {
-    //     var newLine = '<p id="row' + i + '" class="row">|';
-    //     for (let j = 0; j < board.length; j++) {
-    //         if (boardRotated[i][j] != undefined) newLine += boardRotated[i][j] + ' ';
-    //         else newLine += '. ';
-    //     }
-    //     newLine += '|</p>'
-    //     thediv.prepend(newLine);
-    // }
-
     for (let i = 0; i < boardRotated.length - 1; i++) {
         for (let j = 0; j < boardRotated.length; j++) {
             if (boardRotated[i][j] != undefined) {
@@ -41,7 +29,7 @@ function updateboard(board) {
                 var height = $(document).height();
                 var width = $(document).width();
                 $('#ball' + i + j).css({ 'top': height / 2 - 7 * 30 + (7 - i) * 60 + "px", "left": width / 2 - 7 * 30 + (j * 60) + "px" });
-                if (boardRotated[i][j] == 'y') {
+                if (boardRotated[i][j] == 'B') {
                     //$('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
                     $('#ball' + i + j).css({ 'background': "url('../images/lama_p2.png')", 'background-size': '100% 100%' });
 
@@ -60,15 +48,34 @@ function updateboard(board) {
         $('#column-' + i).css({ 'left': leftBase + 60 * i + 'px', 'top': topBase + 'px' });
     }
 
+    disableFull();
+
+    console.log(leftBase);
+
+}
+
+function disableFull() {
     for (let i = 0; i < 7; i++) {
         if (board[i].length >= 6) {
             $('#column-' + i).click(false);
             $('#column-' + i).css({ 'visibility': 'hidden' });
         }
     }
+}
 
-    console.log(leftBase);
+function disableAll() {
+    for (let i = 0; i < 7; i++) {
+        //$('#column-' + i).click(false);
+        $('#column-' + i).css({ 'visibility': 'hidden' });
+    }
+}
 
+function enableAll() {
+    for (let i = 0; i < 7; i++) {
+        //$('#column-' + i).click(postDisk(event));
+        $('#column-' + i).css({ 'visibility': 'visible' });
+    }
+    disableFull();
 }
 
 function setup() {
@@ -76,17 +83,46 @@ function setup() {
 
 
     socket.onopen = function () {
-        socket.send("{}");
+        socket.send(JSON.stringify({ code: 'connect' }));
     };
 
-    socket.onmessage = function(event) {
+    socket.onmessage = function (event) {
         var jmessage = JSON.parse(event.data);
-        updateboard(jmessage);
+        console.log(jmessage.code);
+
+        if (jmessage.code == 'update') {
+            board = jmessage.data;
+            user = jmessage.user;
+            console.log(jmessage.data);
+            updateboard(jmessage.data);
+        }
+        if (jmessage.code == 'wait') {
+            disableAll();
+            $('#status').text("Wait for an opponent");
+        }
+        if (jmessage.code == 'enable') {
+            enableAll();
+            $('#status').text("Your turn!");
+        }
+        if (jmessage.code == 'disable') {
+            disableAll();
+            $('#status').text("Opponent's turn!");
+        } 
+        if (jmessage.code == 'win') {
+            disableAll();
+            $('#status').text("You won!");
+        } 
+        if (jmessage.code == 'lose') {
+            disableAll();
+            $('#status').text("You lost :(");
+        }
     }
 
     function postDisk(event) {
-        var cid = event.target.id.slice(-1);
-        socket.send(JSON.stringify({ type: 'postDisk', column: cid, user: user }));
+        var columnId = event.target.id.slice(-1);
+        socket.send(JSON.stringify({ code: 'postDisk', column: columnId, user: user }));
+        $('#status').text("Opponent's turn!");
+        disableAll();
     }
 
     $('.column').click(function () { postDisk(event) });
@@ -94,52 +130,9 @@ function setup() {
     //server sends a close event only if the game was aborted from some side
 
     socket.onerror = function () { };
-}; //execute immediately
+};
 
 
-/*
- * Post a new suggestion and refresh list
- */
-// function postDUID(user, col) {
-//     event.preventDefault();
-
-//     var sug = {
-//         color: user,
-//         row: col
-//     }
-
-//     $.post('/color/', sug).done(updateboard);
-// }
-/*
- * Post a new suggestion and refresh list
- */
-function postDUI(event) {
-    event.preventDefault();
-
-    var sug = {
-        color: $('input[name=color]').val(),
-        row: $('input[name=row]').val()
-    }
-
-    $.post('/color/', sug).done(updateboard);
-}
-
-// /*
-//  * Upvote an existing suggestion
-//  */
-// function upvote(sid) {
-//     $.post('/votes/' + sid).done(function (res) {
-//         var currentVote = $("#s" + sid + " span.votes")[0];
-//         currentVote.innerHtml = parseInt(currentVote.innerHtml) + 1;
-
-//         var link = $("#s" + sid + " a.action")[0];
-//         link.innerHtml = '-1';
-//         link.onclick(function (event) {
-
-//         });
-//     });
-//     //$( "#" ).getElementById('s' + sid).onclick = function changeContent() {};
-// }
 
 // When the document is ready:
 // - First call to update the list of board
@@ -154,7 +147,5 @@ $(document).ready(function () {
     // $(document).getElementsByClassName('column').addEventListener('click', function() {console.log('click')});
     // $('.column').click(function () { postDisk(event) });
 
-    window.addEventListener("resize", function () { updateboard() }, true);
-
-    $("form").submit(postDUI);
+    window.addEventListener("resize", function () { updateboard(board) }, true);
 });

@@ -5,11 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 
 var bodyParser = require('body-parser');
 var websocket = require('ws');
+
+var logic = require('./javascript/logic');
+var game = require('./javascript/game');
 
 var router = express.Router();
 
@@ -17,64 +20,18 @@ var app = express();
 
 module.exports = app;
 
-
-
-
-
 var port = 3000;
 
-var size = 7;
+var generateBoard = logic.generateBoard;
 
-generateBoard = function () {
-    var result = [];
-    for (let i = 0; i < size; i++) {
-        result.push([]);
-    }
-    return result;
+var checkBoard = logic.checkBoard;
+
+var gameStatus = {
+    since: Date.now() /* since we keep it simple and in-memory, keep track of when this object was created */,
+    gamesInitialized: 0 /* number of games initialized */,
+    gamesAborted: 0 /* number of games aborted */,
+    gamesCompleted: 0 /* number of games successfully completed */
 };
-
-var board = generateBoard();
-
-// board = [
-//     ['r'],
-//     ['y', 'r'],
-//     ['y', 'y', 'r'],
-//     ['r', 'y', 'r', 'r'],
-//     [],
-//     [],
-//     []
-// ];
-
-checkBoard = function (board) {
-    //checking for horizontal matches
-    for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size - 3; j++) {
-            if (board[i][j] == board[i][j + 1] && board[i][j + 2] == board[i][j + 3] && board[i][j] == board[i][j + 2] && board[i][j + 3] != undefined) return board[i][j];
-        }
-    }
-
-    //checking for vertical matches
-    for (let i = 0; i < size - 3; i++) {
-        for (let j = 0; j < size; j++) {
-            if (board[i][j] == board[i + 1][j] && board[i + 2][j] == board[i + 3][j] && board[i][j] == board[i + 3][j] && board[i + 3][j] != undefined) return board[i][j];
-        }
-    }
-
-    //checking for diagonal matches (\)
-    for (let i = 0; i < size - 3; i++) {
-        for (let j = 0; j < size - 3; j++) {
-            if (board[i][j] == board[i + 1][j + 1] && board[i + 2][j + 2] == board[i + 3][j + 3] && board[i][j] == board[i + 3][j + 3] && board[i][j] != undefined) return board[i][j];
-        }
-    }
-
-    //checking for diagonal matches (/)
-    for (let i = 0; i < size - 3; i++) {
-        for (let j = 3; j < size; j++) {
-            if (board[i][j] == board[i + 1][j - 1] && board[i + 2][j - 2] == board[i + 3][j - 3] && board[i][j] == board[i + 3][j - 3] && board[i][j] != undefined) return board[i][j];
-        }
-    }
-    return false;
-}
 
 // Serve static files under /client, if available
 app.use(express.static(__dirname + "/public"));
@@ -89,20 +46,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// //app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-/* GET home page */
-// router.get("/splash", function (req, res) {
-//     res.sendFile("splash.html", { root: "./public" });
-// });
-
-// router.get("/home", function (req, res) {
-//     res.sendFile("splash.html", { root: "./public" });
-// });
 
 /* Pressing the 'PLAY' button, returns this page */
 router.get("/play", function (req, res) {
@@ -122,6 +71,7 @@ app.get("/", (req, res) => {
 var server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
+var currentGame = new game(gameStatus.gamesInitialized++, generateBoard());
 var conID = 0;
 
 var websockets = {};
@@ -129,65 +79,103 @@ var websockets = {};
 wss.on("connection", function connection(ws) {
     let connection = ws;
     connection.id = conID++;
+    let playerType = currentGame.addPlayer(connection);
+    websockets[connection.id] = currentGame;
+    console.log(currentGame.id);
 
     console.log(
-        "Player %s placed in game",
+        "Player %s placed in game %s as %s",
         connection.id,
+        currentGame.id,
+        playerType
     );
+
+    if (currentGame.hasTwoConnectedPlayers()) {
+        console.log("disable");
+        currentGame.playerB.send(JSON.stringify({ code: 'disable' }));
+        currentGame.playerA.send(JSON.stringify({ code: 'enable' }));
+        currentGame = new game(gameStatus.gamesInitialized++, generateBoard());
+    }
+
+    var newMessage = {};
+
+    if (currentGame.nPlayers == 1) {
+        newMessage.code = 'wait';
+        console.log('wait');
+        newMessage.board = generateBoard();
+        currentGame.currentPlayer = currentGame.playerA;
+        currentGame.playerA.send(JSON.stringify(newMessage));
+    }
+
+    connection.send(JSON.stringify({ code: 'update', data: currentGame.board }));
 
     connection.on('message', function incoming(message) {
         var jmessage = JSON.parse(message);
-        if (jmessage.type == 'postDisk') {
-        board[jmessage.column].push(jmessage.user);
-        connection.send(JSON.stringify(board));
+
+        let currGame = websockets[connection.id];
+        let board = currGame.board;
+
+        newMessage.code = 'update';
+
+        console.log(jmessage.code);
+
+        if (jmessage.code == 'connect') {
+            newMessage.data = board;
+            newMessage.user = playerType;
+            currGame.playerA.send(JSON.stringify(newMessage));
+        }
+
+        if (jmessage.code == 'postDisk') {
+            board[jmessage.column].push(jmessage.user);
+            newMessage.data = board;
+
+            currGame.playerA.send(JSON.stringify(newMessage));
+            currGame.playerB.send(JSON.stringify(newMessage));
+
+            let lastPlayer = currGame.currentPlayer;
+
+            if (checkBoard(board)) {
+                if (lastPlayer == currGame.playerA) {
+                    currGame.playerB.send(JSON.stringify({ code: 'lose' }));
+                } else {
+                    currGame.playerA.send(JSON.stringify({ code: 'lose' }));
+                }
+                lastPlayer.send(JSON.stringify({ code: 'win' }))
+            } else {
+
+                if (lastPlayer == currGame.playerA) {
+                    currGame.currentPlayer = currGame.playerB;
+                } else {
+                    currGame.currentPlayer = currGame.playerA;
+                }
+
+                currGame.currentPlayer.send(JSON.stringify({ code: 'enable' }));
+            }
+
+
         } else {
-            connection.send(JSON.stringify(board));
+            //connection.send(JSON.stringify(board));
         }
     });
 
 
-    
+
 });
 
-// //catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
+//catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
+});
 
-// //error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//error handler
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-
-
-// app.post('/color/', function (req, res) {
-//     board[req.body.row].push(req.body.color);
-//     if (req.body.color == 'reset') {
-//         board = generateBoard();
-//     }
-//     for (let i = 0; i < size; i++) {
-//         console.log(board[i]);
-//     }
-//     console.log(checkBoard(board));
-//     res.end();
-// });
-
-// app.get('/board/', function (req, res) {
-//     res.json(board);
-//     res.end();
-// });
-
-// // Create HTTP server and listen to port 3000
-// http.createServer(app).listen(3000, function () {
-//     console.log("# Listening to port 3000...");
-// });
-
-// console.log(checkBoard(board));
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+});
 
 server.listen(port);
