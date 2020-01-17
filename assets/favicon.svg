@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="80"
+   height="80"
+   viewBox="0 0 21.166666 21.166667"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="favicon.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9195959"
+     inkscape:cx="35.800526"
+     inkscape:cy="43.286212"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-275.83332)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot817"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:Verdana;font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:Verdana;font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion819"><rect
+           id="rect821"
+           width="78.160553"
+           height="61.240498"
+           x="-15.278557"
+           y="14.087546" /></flowRegion><flowPara
+         id="flowPara823" /></flowRoot>    <rect
+       style="opacity:1;fill:#31bd79;fill-opacity:1;stroke:none;stroke-width:0.31358024;stroke-opacity:1"
+       id="rect819"
+       width="21.166666"
+       height="21.166666"
+       x="0"
+       y="275.83331" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     style="display:inline">
+    <rect
+       transform="translate(0,-275.83331)"
+       style="opacity:1;fill:#2cd583;fill-opacity:1;stroke:none;stroke-width:0.06562907;stroke-opacity:1"
+       id="rect815"
+       width="19.84375"
+       height="19.84375"
+       x="0.66145831"
+       y="276.49478" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot821"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'HoloLens MDL2 Assets';-inkscape-font-specification:'HoloLens MDL2 Assets';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="scale(0.26458333)"><flowRegion
+         id="flowRegion823"><rect
+           id="rect825"
+           width="83.716393"
+           height="53.916893"
+           x="-20.834396"
+           y="11.309627" /></flowRegion><flowPara
+         id="flowPara827"
+         style="-inkscape-font-specification:'Carter One';font-family:'Carter One';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">C4</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot829"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.66666698px;line-height:1.25;font-family:'HoloLens MDL2 Assets';-inkscape-font-specification:'HoloLens MDL2 Assets';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+       transform="matrix(1.4122319,0,0,1.4122319,-11.908483,-23.308413)"><flowRegion
+         id="flowRegion831"
+         style="font-size:10.66666698px;fill:#ffffff"><rect
+           id="rect833"
+           width="79.044434"
+           height="53.538086"
+           x="8.7125654"
+           y="15.855313"
+           style="font-size:10.66666698px;fill:#ffffff" /></flowRegion><flowPara
+         id="flowPara835"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.66666698px;font-family:'Carter One';-inkscape-font-specification:'Carter One';fill:#ffffff">C4</flowPara></flowRoot>  </g>
+</svg>
