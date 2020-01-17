@@ -1,10 +1,8 @@
-/*Used font*/
-@import url('https://fonts.google.com/specimen/Lato?selection.family=Lato');
 
-/*Global vars in root*/
-/*:root {
-
-}*/
+:root {
+	min-width: 520px;
+	min-height: 750px;
+}
 
 html, body {
 	width: 100%;
@@ -17,7 +15,6 @@ html, body {
 	font-size: 7vw;
 	font-family: pacifico;
 	text-align: center;
-	/*background-color: white;*/
 	width: 102%;
 	margin-top: 3%;
 	margin-left: -1%;
@@ -30,8 +27,10 @@ html, body {
 
 main #stats-1, #stats-2, #stats-3 {
 	font-size: 3vw;
+	font-family: pacifico;
 	text-align: center;
-	margin-top: 3%;
+	color: #A87C29;
+	margin-top: 8%;
 	margin-left: 5%;
 	float: left;
 	width: 26.67%;
@@ -52,7 +51,7 @@ main #stats:after {
 	font-size: 3vw;
 	cursor: pointer;
 	text-align: center;
-	margin-top: 10%;
+	margin-top: 5%;
 	margin-left: 30%;
 	background: url('/../images/play_button.png');
 	background-size: 100% 100%;
@@ -67,24 +66,14 @@ main #stats:after {
 }
 
 footer {
-	position: fixed;
-	bottom: 1%;
-	width: 100%;
-	font-size: x-large;
-	text-align: center;
-	background-color: magenta;
-}
-
-footer {
     position: fixed;
-    left: 0;
-    bottom: 0;
+    bottom: 1%;
     width: 100%;
     font-size: 30px;
     background-color: #A87C29;
     color: white;
     text-align: center;
-  }
+}
 
 @keyframes swivel {
 	0%{transform: rotate(-10deg);}

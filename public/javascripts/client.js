@@ -39,7 +39,8 @@ function updateboard(board) {
     }
 
     var d = $(document);
-    $('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px' });
+   $('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px' });
+   //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
 
     var leftBase = d.width() / 2 - 216;
     var topBase = d.height() / 2 - 118;
@@ -80,7 +81,7 @@ function enableAll() {
 
 function setup() {
     var socket = new WebSocket('ws://localhost:3000');
-
+    
 
     socket.onopen = function () {
         socket.send(JSON.stringify({ code: 'connect' }));
@@ -98,7 +99,7 @@ function setup() {
         }
         if (jmessage.code == 'wait') {
             disableAll();
-            $('#status').text("Wait for an opponent");
+            $('#status').text("Waiting for an opponent");
         }
         if (jmessage.code == 'enable') {
             enableAll();
