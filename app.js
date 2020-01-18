@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
+var sessions = require("express-session");
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -28,10 +29,9 @@ var checkBoard = logic.checkBoard;
 
 var gameStatus = {
     since: Date.now() /* since we keep it simple and in-memory, keep track of when this object was created */,
-    gamesInitialized: 0 /* number of games initialized */,
-    gamesAborted: 0 /* number of games aborted */,
+    gamesStarted: 0 /* number of games started */,
     gamesCompleted: 0 /* number of games successfully completed */,
-    gamesStarted: 0
+    totalPlayers: 0
 };
 
 // Serve static files under /client, if available
@@ -66,13 +66,17 @@ app.get("/play", router);
 // });
 
 app.get("/", (req, res) => {
-    res.render('splash.ejs', {});
+    res.render('splash.ejs', {
+    gamesStarted: gameStatus.gamesStarted,
+    gamesCompleted: gameStatus.gamesCompleted,
+    totalPlayers: gameStatus.totalPlayers 
+    });
 });
 
 var server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
-var currentGame = new game(gameStatus.gamesInitialized++, generateBoard());
+var currentGame = new game(gameStatus.gamesStarted++, generateBoard());
 var conID = 0;
 
 var websockets = {};
@@ -81,8 +85,10 @@ wss.on("connection", function connection(ws) {
     let connection = ws;
     connection.id = conID++;
     let playerType = currentGame.addPlayer(connection);
+    gameStatus.totalPlayers++;
     websockets[connection.id] = currentGame;
     console.log(currentGame.id);
+    
 
     console.log(
         "Player %s placed in game %s as %s",
@@ -95,7 +101,7 @@ wss.on("connection", function connection(ws) {
         console.log("disable");
         currentGame.playerB.send(JSON.stringify({ code: 'disable' }));
         currentGame.playerA.send(JSON.stringify({ code: 'enable' }));
-        currentGame = new game(gameStatus.gamesInitialized++, generateBoard());
+        currentGame = new game(gameStatus.gamesStarted++, generateBoard());
     }
 
     var newMessage = {};
@@ -141,6 +147,7 @@ wss.on("connection", function connection(ws) {
                 } else {
                     currGame.playerA.send(JSON.stringify({ code: 'lose' }));
                 }
+                gameStatus.gamesCompleted++;
                 lastPlayer.send(JSON.stringify({ code: 'win' }))
             } else {
 
@@ -161,6 +168,34 @@ wss.on("connection", function connection(ws) {
 
 
 
+});
+
+app.use(cookieParser("C4_cookie"));
+
+var sessionConfig = {
+    secret: "C4_cookie",
+    resave: false,
+    saveUninitialized: true,
+};
+
+app.use(sessions(sessionConfig));
+
+// ! change port to 3000 !
+http.createServer(app).listen(3001);
+
+app.get("/me", function (req, res) {
+    var session = req.session;
+    if(session.views) {
+        session.views++;
+        var lv = session.lastVisit;
+        session.lastVisit = new Date().toUTCString();
+        res.send("You have been here " + session.views + " times (last visit: " + lv + ").");
+    }
+    else {
+        session.views = 1;
+        session.lastVisit = new Date().toUTCString();
+        res.send("Welcome on our site!");
+    }
 });
 
 //catch 404 and forward to error handler
