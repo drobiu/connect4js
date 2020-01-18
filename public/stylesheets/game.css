@@ -1,6 +1,6 @@
 :root {
-	min-width: 520px;
-	min-height: 750px;
+    min-width: 520px;
+    min-height: 750px;
 }
 
 html, body {
@@ -14,7 +14,7 @@ html, body {
 }
 
 h1 {
-    color: #A87C29;
+    color: #825d0e;
     text-align: center;
     font-family: pacifico;
 }
@@ -54,8 +54,6 @@ header button:hover {
     z-index: 2;
     background-image: url('/../images/lama_p1.png');
     background-size: 100% 100%;
-    animation-name: falling;
-    animation-duration: 0.5s;
 }
 
 #boardBackground {
@@ -66,6 +64,7 @@ header button:hover {
 }
 
 .column {
+    background-size: 50px;
     position: absolute;
     height: 405px;
     width: 60px;
@@ -82,9 +81,29 @@ footer {
     bottom: 1%;
     width: 100%;
     font-size: 3vw;
-    background-color: #A87C29;
+    background-color: #825d0e;
     color: white;
     text-align: center;
+}
+
+#background {
+    position: absolute;
+    bottom: 0px;
+    max-width: 100%;
+    right: 0px;
+}
+
+#sun {
+    height: 250px;
+    width: 238.3px;
+    background-image: url("/../images/sun.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    max-height: 250px;
+    animation: sun 6s infinite;
+    overflow-x: hidden;
 }
 
 /* .background {
@@ -96,7 +115,7 @@ footer {
     position: relative;
 } */
 
-/* @keyframes example {
-    0%   {left:0px; top:0px;}
-    100% {left:100px; top:100px;}
-  } */
+@keyframes sun {
+
+     to{transform: rotate(180deg);}
+}

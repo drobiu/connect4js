@@ -21,14 +21,18 @@ function updateboard(board) {
         }
     }
 
+    var d = $(document);
+    var height = $(document).height();
+    var width = $('#background').width();
+
     for (let i = 0; i < boardRotated.length - 1; i++) {
         for (let j = 0; j < boardRotated.length; j++) {
             if (boardRotated[i][j] != undefined) {
                 var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
                 thediv.prepend(newLine);
-                var height = $(document).height();
-                var width = $(document).width();
+                
                 $('#ball' + i + j).css({ 'top': height / 2 - 7 * 30 + (7 - i) * 60 + "px", "left": width / 2 - 7 * 30 + (j * 60) + "px" });
+
                 if (boardRotated[i][j] == 'B') {
                     //$('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
                     $('#ball' + i + j).css({ 'background': "url('../images/lama_p2.png')", 'background-size': '100% 100%' });
@@ -38,12 +42,12 @@ function updateboard(board) {
         }
     }
 
-    var d = $(document);
-   $('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px' });
-   //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
+    
+    $('#boardBackground').css({ 'top': height / 2 - 118 + 'px', 'left': width / 2 - 236 + 'px' });
+    //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
 
-    var leftBase = d.width() / 2 - 216;
-    var topBase = d.height() / 2 - 118;
+    var leftBase = width / 2 - 216;
+    var topBase = height / 2 - 118;
 
     for (let i = 0; i < 7; i++) {
         $('#column-' + i).css({ 'left': leftBase + 60 * i + 'px', 'top': topBase + 'px' });
@@ -81,7 +85,7 @@ function enableAll() {
 
 function setup() {
     var socket = new WebSocket('ws://localhost:3000');
-    
+
 
     socket.onopen = function () {
         socket.send(JSON.stringify({ code: 'connect' }));
@@ -94,7 +98,7 @@ function setup() {
         if (jmessage.code == 'update') {
             board = jmessage.data;
             user = jmessage.user;
-            console.log(jmessage.data);
+            //console.log(jmessage.data);
             updateboard(jmessage.data);
         }
         if (jmessage.code == 'wait') {
@@ -108,14 +112,18 @@ function setup() {
         if (jmessage.code == 'disable') {
             disableAll();
             $('#status').text("Opponent's turn!");
-        } 
+        }
         if (jmessage.code == 'win') {
             disableAll();
-            $('#status').text("You won!");
-        } 
+            $('#status').text("You won! 🤠");
+        }
         if (jmessage.code == 'lose') {
             disableAll();
-            $('#status').text("You lost :(");
+            $('#status').text("You lost 😔");
+        }
+        if (jmessage.code == 'abort') {
+            disableAll();
+            $('#status').text("The opponent left the game, would you like to start another match?");
         }
     }
 
@@ -127,6 +135,12 @@ function setup() {
     }
 
     $('.column').click(function () { postDisk(event) });
+
+    function abort() {
+        socket.send(JSON.stringify({code: 'abort'}));
+    }
+
+    $('#back-button').click(function () { abort() });
 
     //server sends a close event only if the game was aborted from some side
 
