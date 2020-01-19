@@ -1,10 +1,8 @@
-/*Used font*/
-@import url('https://fonts.google.com/specimen/Lato?selection.family=Lato');
 
-/*Global vars in root*/
-/*:root {
-
-}*/
+:root {
+	min-width: 520px;
+	min-height: 750px;
+}
 
 html, body {
 	width: 100%;
@@ -17,7 +15,6 @@ html, body {
 	font-size: 7vw;
 	font-family: pacifico;
 	text-align: center;
-	/*background-color: white;*/
 	width: 102%;
 	margin-top: 3%;
 	margin-left: -1%;
@@ -28,10 +25,44 @@ html, body {
 	display: inline;
 }
 
+.block {
+	display: block;
+	/*width: 30%;*/
+	border: none;
+	background-color: white;
+	padding: 4% 10%;
+	cursor: pointer;
+	margin-top: 5%;
+	margin-left: 40%;
+	background: url('/../images/play_button.png');
+	background-size: 100% 100%;
+}
+
+#how-to {
+	font-size: 2vw;
+	font-family: pacifico;
+	text-align: center;
+	color: #825d0e;
+	width: 30%;
+	margin-top: 2%;
+	margin-left: 35%;
+	padding-bottom: 3%;
+	line-height: 120%;
+
+}
+
+/* #how-to h1 {
+	font-size: 3vw;
+	padding-bottom: 3%;
+
+} */
+
 main #stats-1, #stats-2, #stats-3 {
 	font-size: 3vw;
+	font-family: pacifico;
 	text-align: center;
-	margin-top: 3%;
+	color: #825d0e;
+	margin-top: 6%;
 	margin-left: 5%;
 	float: left;
 	width: 26.67%;
@@ -43,48 +74,42 @@ main #stats:after {
 	clear: both;
 }
 
-.block {
-	display: block;
-	width: 40%;
-	border: none;
-	background-color: white;
-	padding: 10% 20%;
-	font-size: 3vw;
-	cursor: pointer;
-	text-align: center;
-	margin-top: 10%;
-	margin-left: 30%;
-	background: url('/../images/play_button.png');
-	background-size: 100% 100%;
-}
-
 .block:hover {
-    opacity: 90%;
-}
-
-.block:hover {
+	opacity: 90%;
 	animation: expand ease-in-out 2s infinite alternate;
 }
 
 footer {
-	position: fixed;
-	bottom: 1%;
-	width: 100%;
-	font-size: x-large;
-	text-align: center;
-	background-color: magenta;
-}
-
-footer {
+	font-family: 'Public Sans', sans-serif;
     position: fixed;
-    left: 0;
-    bottom: 0;
+    bottom: 0.3%;
     width: 100%;
-    font-size: 30px;
-    background-color: #A87C29;
+    font-size: 3vw;
+    background-color: #825d0e;
     color: white;
     text-align: center;
-  }
+    padding-top: 0.3%;
+    padding-bottom: 0.3%;
+}
+
+#sun {
+    height: 250px;
+    width: 238.3px;
+    background-image: url("/../images/sun.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    max-height: 250px;
+    animation: sun 6s infinite;
+    overflow-x: hidden;
+}
+
+#cookies {
+	padding-top: 0.3%;
+	padding-left: 0.3%;
+	cursor: pointer;
+}
 
 @keyframes swivel {
 	0%{transform: rotate(-10deg);}
@@ -94,4 +119,9 @@ footer {
 @keyframes expand {
 	0%{transform: scale(90%);}
 	100% {transform: scale(110%);}
+}
+
+@keyframes sun {
+
+	to{transform: rotate(180deg);}
 }

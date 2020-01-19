@@ -7,15 +7,18 @@
         <link href="/stylesheets/game.css" rel="stylesheet" type="text/css">
         <script language="javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script language="javascript" src="/javascripts/client.js"></script>
-    </head>
+	</head>
     <body>
 
 		<header>
+			<div id="sun"></div>
+			<img id="background" src="/images/back.png">
 			<div id="top-bar">
-				<div>
+				<p>
 					<div id="back-button" class="hide">
 						<button type="button" onclick="window.location.href = '/';"></button>
 					</div>
+					<p id=timer></p>
 				</div>
 			</div>
         </header>
@@ -46,9 +49,9 @@
 		</main>
         <div>
             <div id="board"></div>
-            <img id="boardBackground" src="/images/board.png">
-            
-        </div>
+            <img id="boardBackground" src="/images/board.png">        
+		</div>
+		
         <footer>
 			<div class="contact-container">
 				<div class="contact" style="font-size: 50%;">

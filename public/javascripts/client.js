@@ -3,6 +3,10 @@ if (Math.random() > 0.5) {
     user = 'r';
 }
 
+var ping = document.createElement('audio');
+ping.setAttribute('src', '/../sounds/ping.wav');
+
+
 var board;
 /* 
      * Update list of board and corresponding actions
@@ -11,6 +15,8 @@ function updateboard(board) {
     // Select the <div> that contains the suggestion list and clear it
     var thediv = $("#board");
     thediv.empty();
+
+    console.log('user: ' + user);
 
     var boardRotated = [];
 
@@ -21,14 +27,17 @@ function updateboard(board) {
         }
     }
 
+    var height = $(document).height();
+    var width = $('#background').width();
+
     for (let i = 0; i < boardRotated.length - 1; i++) {
         for (let j = 0; j < boardRotated.length; j++) {
             if (boardRotated[i][j] != undefined) {
                 var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
                 thediv.prepend(newLine);
-                var height = $(document).height();
-                var width = $(document).width();
+
                 $('#ball' + i + j).css({ 'top': height / 2 - 7 * 30 + (7 - i) * 60 + "px", "left": width / 2 - 7 * 30 + (j * 60) + "px" });
+
                 if (boardRotated[i][j] == 'B') {
                     //$('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
                     $('#ball' + i + j).css({ 'background': "url('../images/lama_p2.png')", 'background-size': '100% 100%' });
@@ -38,11 +47,12 @@ function updateboard(board) {
         }
     }
 
-    var d = $(document);
-    $('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px' });
 
-    var leftBase = d.width() / 2 - 216;
-    var topBase = d.height() / 2 - 118;
+    $('#boardBackground').css({ 'top': height / 2 - 118 + 'px', 'left': width / 2 - 236 + 'px' });
+    //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
+
+    var leftBase = width / 2 - 216;
+    var topBase = height / 2 - 118;
 
     for (let i = 0; i < 7; i++) {
         $('#column-' + i).css({ 'left': leftBase + 60 * i + 'px', 'top': topBase + 'px' });
@@ -78,12 +88,18 @@ function enableAll() {
     disableFull();
 }
 
+function hideAll() {
+    disableAll();
+    $('#board').css({ 'visibility': 'hidden' });
+    $('#boardBackground').css({ 'visibility': 'hidden' });
+}
+
 function setup() {
-    var socket = new WebSocket('ws://localhost:3000');
+    var socket = new WebSocket('ws://80.112.185.110:3000');
 
 
     socket.onopen = function () {
-        socket.send(JSON.stringify({ code: 'connect' }));
+        socket.send(JSON.stringify({ code: 'connect', user: user }));
     };
 
     socket.onmessage = function (event) {
@@ -93,12 +109,12 @@ function setup() {
         if (jmessage.code == 'update') {
             board = jmessage.data;
             user = jmessage.user;
-            console.log(jmessage.data);
+            console.log('user: ' + jmessage.user);
             updateboard(jmessage.data);
         }
         if (jmessage.code == 'wait') {
             disableAll();
-            $('#status').text("Wait for an opponent");
+            $('#status').text("Waiting for an opponent");
         }
         if (jmessage.code == 'enable') {
             enableAll();
@@ -107,30 +123,59 @@ function setup() {
         if (jmessage.code == 'disable') {
             disableAll();
             $('#status').text("Opponent's turn!");
-        } 
+        }
         if (jmessage.code == 'win') {
-            disableAll();
-            $('#status').text("You won!");
-        } 
+
+            $('#status').text("You won! Click to play again ").append("<img src='/images/happy_cowboy.png'/>");
+            $('#status').click(function () { window.location.href = "/play"; });
+        }
         if (jmessage.code == 'lose') {
-            disableAll();
-            $('#status').text("You lost :(");
+
+            $('#status').text("You lost. Click to play again ").append("<img src='/images/sad_cowboy.png'/>");
+            $('#status').click(function () { window.location.href = "/play"; });
+        }
+        if (jmessage.code == 'tie') {
+
+            $('#status').text("It's a tie. Click to play again ");
+            $('#status').click(function () { window.location.href = "/play"; });
+        }
+        if (jmessage.code == 'abort') {
+            hideAll();
+            $('#status').text('Your opponent has chickened out. Click to play again ');
+            $('#status').click(function () { window.location.href = "/play"; });
         }
     }
 
     function postDisk(event) {
         var columnId = event.target.id.slice(-1);
         socket.send(JSON.stringify({ code: 'postDisk', column: columnId, user: user }));
+        ping.play();
         $('#status').text("Opponent's turn!");
         disableAll();
     }
 
     $('.column').click(function () { postDisk(event) });
 
+    function abort() {
+        socket.send(JSON.stringify({ code: 'abort', user: user }));
+    }
+
+    $('#back-button').click(function () { abort() });
+    //$(window).on("beforeunload", abort());
+
     //server sends a close event only if the game was aborted from some side
 
     socket.onerror = function () { };
-};
+}
+
+function timer() {
+    var time = 0;
+    setInterval(function () {
+        time++;
+        $('#timer').text('Play time: ' + time + ' seconds.');
+    }, 1000);
+
+}
 
 
 
@@ -148,4 +193,6 @@ $(document).ready(function () {
     // $('.column').click(function () { postDisk(event) });
 
     window.addEventListener("resize", function () { updateboard(board) }, true);
+
+    timer();
 });
