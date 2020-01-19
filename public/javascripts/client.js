@@ -12,6 +12,8 @@ function updateboard(board) {
     var thediv = $("#board");
     thediv.empty();
 
+    console.log('user: ' + user);
+
     var boardRotated = [];
 
     for (let i = 0; i < board.length; i++) {
@@ -30,7 +32,7 @@ function updateboard(board) {
             if (boardRotated[i][j] != undefined) {
                 var newLine = '<div id="ball' + i + j + '" class="ball"></div>';
                 thediv.prepend(newLine);
-                
+
                 $('#ball' + i + j).css({ 'top': height / 2 - 7 * 30 + (7 - i) * 60 + "px", "left": width / 2 - 7 * 30 + (j * 60) + "px" });
 
                 if (boardRotated[i][j] == 'B') {
@@ -42,7 +44,7 @@ function updateboard(board) {
         }
     }
 
-    
+
     $('#boardBackground').css({ 'top': height / 2 - 118 + 'px', 'left': width / 2 - 236 + 'px' });
     //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
 
@@ -83,12 +85,18 @@ function enableAll() {
     disableFull();
 }
 
+function hideAll() {
+    disableAll();
+    $('#board').css({ 'visibility': 'hidden' });
+    $('#boardBackground').css({ 'visibility': 'hidden' });
+}
+
 function setup() {
-    var socket = new WebSocket('ws://localhost:3000');
+    var socket = new WebSocket('ws://80.112.185.110:3000');
 
 
     socket.onopen = function () {
-        socket.send(JSON.stringify({ code: 'connect' }));
+        socket.send(JSON.stringify({ code: 'connect', user: user }));
     };
 
     socket.onmessage = function (event) {
@@ -98,7 +106,7 @@ function setup() {
         if (jmessage.code == 'update') {
             board = jmessage.data;
             user = jmessage.user;
-            //console.log(jmessage.data);
+            console.log('user: ' + jmessage.user);
             updateboard(jmessage.data);
         }
         if (jmessage.code == 'wait') {
@@ -114,16 +122,17 @@ function setup() {
             $('#status').text("Opponent's turn!");
         }
         if (jmessage.code == 'win') {
-            disableAll();
-            $('#status').text("You won! 🤠");
+            //setTimeout(function(){ hideAll(); }, 3000);
+            $('#status').text("You won! 🤠 Click to play again.");
         }
         if (jmessage.code == 'lose') {
-            disableAll();
-            $('#status').text("You lost 😔");
+            //setTimeout(function(){ hideAll(); }, 3000);
+            $('#status').text("You lost 😔 Click to play again.");
         }
         if (jmessage.code == 'abort') {
-            disableAll();
-            $('#status').text("The opponent left the game, would you like to start another match?");
+            hideAll();
+            $('#status').text('The opponent has left the game. Click here if you would like to start another match.');
+            $('#status').click(function () { window.location.href = "/play"; });
         }
     }
 
@@ -137,10 +146,11 @@ function setup() {
     $('.column').click(function () { postDisk(event) });
 
     function abort() {
-        socket.send(JSON.stringify({code: 'abort'}));
+        socket.send(JSON.stringify({ code: 'abort', user: user }));
     }
 
     $('#back-button').click(function () { abort() });
+    //$(window).on("beforeunload", abort());
 
     //server sends a close event only if the game was aborted from some side
 

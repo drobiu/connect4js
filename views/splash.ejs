@@ -7,10 +7,14 @@
 		<link rel="stylesheet" type="text/css" href="/stylesheets/index_style.css">
 		<link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Pacifico|Public+Sans&display=swap" rel="stylesheet">
+		<script> function cookieAlert() { $('#cookies').click(function () { $('#cookies').css({ 'visibility': 'hidden' });}); } </script>
 
 	</head>
 	<body onload="cookieAlert()">
 		<header>
+			<p id='cookies'>[x] This site uses cookies</p>
+			<div id="sun"></div>
+			<img id="background" src="/images/back.png">
 			<div id="title-box">
 				<div id="title">
 					<marquee direction='right' behavior='alternate'><h1 style="color: #EF476F;">C</h1><h1 style="color: #FFD166;">o</h1><h1 style="color: #06D6A0;">n</h1><h1 style="color: #118AB2;">n</h1><h1 style="color: #FFD166;">e</h1><h1 style="color: #EF476F;">c</h1><h1 style="color: #118AB2;">t </h1><h1 style="color: #06D6A0;">4</h1></marquee>
@@ -42,7 +46,7 @@
 				</h3>
 			</div>
 			<div>
-				<button type="button" class="block" onclick="window.location.href = 'game.html';"></button>
+				<button type="button" class="block" onclick="window.location.href = 'play';"></button>
 			</div>
 		</main>
 		<footer>
@@ -52,7 +56,5 @@
 				</div>
 			</div>
 		</footer>
-		<script> function cookieAlert() { window.alert("This website uses cookies to collect your data and enhance your experience.\n"
-											+ "If you don't agree to that, please close the window."); } </script>
 	</body>
 </html>

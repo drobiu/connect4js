@@ -67,9 +67,9 @@ app.get("/play", router);
 
 app.get("/", (req, res) => {
     res.render('splash.ejs', {
-    gamesStarted: gameStatus.gamesStarted,
-    gamesCompleted: gameStatus.gamesCompleted,
-    totalPlayers: gameStatus.totalPlayers 
+        gamesStarted: gameStatus.gamesStarted,
+        gamesCompleted: gameStatus.gamesCompleted,
+        totalPlayers: gameStatus.totalPlayers
     });
 });
 
@@ -88,7 +88,7 @@ wss.on("connection", function connection(ws) {
     gameStatus.totalPlayers++;
     websockets[connection.id] = currentGame;
     console.log(currentGame.id);
-    
+
 
     console.log(
         "Player %s placed in game %s as %s",
@@ -96,6 +96,16 @@ wss.on("connection", function connection(ws) {
         currentGame.id,
         playerType
     );
+
+    function logging(message) {
+        console.log(
+            "code: %s game: %s player: %s %s",
+            message.code,
+            currentGame.id,
+            message.user,
+            playerType
+        )
+    }
 
     if (currentGame.hasTwoConnectedPlayers()) {
         console.log("disable");
@@ -130,6 +140,17 @@ wss.on("connection", function connection(ws) {
             newMessage.data = board;
             newMessage.user = playerType;
             currGame.playerA.send(JSON.stringify(newMessage));
+        }
+
+        if (jmessage.code == 'abort') {
+
+            if (jmessage.user == 'A') {
+                currGame.playerB.send(JSON.stringify({ code: 'abort' }));
+            } else {
+                currGame.playerA.send(JSON.stringify({ code: 'abort' }));
+            }
+
+            currentGame = new game(gameStatus.gamesStarted++, generateBoard());
         }
 
         if (jmessage.code == 'postDisk') {
@@ -185,7 +206,7 @@ http.createServer(app).listen(3001);
 
 app.get("/me", function (req, res) {
     var session = req.session;
-    if(session.views) {
+    if (session.views) {
         session.views++;
         var lv = session.lastVisit;
         session.lastVisit = new Date().toUTCString();

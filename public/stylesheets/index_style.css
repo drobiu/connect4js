@@ -11,6 +11,14 @@ html, body {
 	font-family: 'PT Sans', sans-serif;
 }
 
+#background {
+    position: absolute;
+    bottom: 0px;
+    max-width: 100%;
+	right: 0px;
+	z-index: -1;
+}
+
 #title {
 	font-size: 7vw;
 	font-family: pacifico;
@@ -58,10 +66,7 @@ main #stats:after {
 }
 
 .block:hover {
-    opacity: 90%;
-}
-
-.block:hover {
+	opacity: 90%;
 	animation: expand ease-in-out 2s infinite alternate;
 }
 
@@ -75,6 +80,23 @@ footer {
     text-align: center;
 }
 
+#sun {
+    height: 250px;
+    width: 238.3px;
+    background-image: url("/../images/sun.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    max-height: 250px;
+    animation: sun 6s infinite;
+    overflow-x: hidden;
+}
+
+#cookies {
+	cursor: pointer;
+}
+
 @keyframes swivel {
 	0%{transform: rotate(-10deg);}
 	100% {transform: rotate(10deg);}
@@ -83,4 +105,9 @@ footer {
 @keyframes expand {
 	0%{transform: scale(90%);}
 	100% {transform: scale(110%);}
+}
+
+@keyframes sun {
+
+	to{transform: rotate(180deg);}
 }
