@@ -3,6 +3,10 @@ if (Math.random() > 0.5) {
     user = 'r';
 }
 
+var ping = document.createElement('audio');
+ping.setAttribute('src', '/../sounds/ping.wav');
+
+
 var board;
 /* 
      * Update list of board and corresponding actions
@@ -23,7 +27,6 @@ function updateboard(board) {
         }
     }
 
-    var d = $(document);
     var height = $(document).height();
     var width = $('#background').width();
 
@@ -122,16 +125,23 @@ function setup() {
             $('#status').text("Opponent's turn!");
         }
         if (jmessage.code == 'win') {
-            //setTimeout(function(){ hideAll(); }, 3000);
-            $('#status').text("You won! 🤠 Click to play again.");
+
+            $('#status').text("You won! Click to play again ").append("<img src='/images/happy_cowboy.png'/>");
+            $('#status').click(function () { window.location.href = "/play"; });
         }
         if (jmessage.code == 'lose') {
-            //setTimeout(function(){ hideAll(); }, 3000);
-            $('#status').text("You lost 😔 Click to play again.");
+
+            $('#status').text("You lost. Click to play again ").append("<img src='/images/sad_cowboy.png'/>");
+            $('#status').click(function () { window.location.href = "/play"; });
+        }
+        if (jmessage.code == 'tie') {
+
+            $('#status').text("It's a tie. Click to play again ");
+            $('#status').click(function () { window.location.href = "/play"; });
         }
         if (jmessage.code == 'abort') {
             hideAll();
-            $('#status').text('The opponent has left the game. Click here if you would like to start another match.');
+            $('#status').text('Your opponent has chickened out. Click to play again ');
             $('#status').click(function () { window.location.href = "/play"; });
         }
     }
@@ -139,6 +149,7 @@ function setup() {
     function postDisk(event) {
         var columnId = event.target.id.slice(-1);
         socket.send(JSON.stringify({ code: 'postDisk', column: columnId, user: user }));
+        ping.play();
         $('#status').text("Opponent's turn!");
         disableAll();
     }
@@ -155,7 +166,16 @@ function setup() {
     //server sends a close event only if the game was aborted from some side
 
     socket.onerror = function () { };
-};
+}
+
+function timer() {
+    var time = 0;
+    setInterval(function () {
+        time++;
+        $('#timer').text('Play time: ' + time + ' seconds.');
+    }, 1000);
+
+}
 
 
 
@@ -173,4 +193,6 @@ $(document).ready(function () {
     // $('.column').click(function () { postDisk(event) });
 
     window.addEventListener("resize", function () { updateboard(board) }, true);
+
+    timer();
 });

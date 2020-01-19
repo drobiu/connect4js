@@ -10,18 +10,20 @@ html, body {
     font-size: medium;
     overflow: hidden;
     background-color: rgb(214, 246, 255);
-    font-family: 'PT Sans', sans-serif;
+    font-family: 'Public Sans', sans-serif;
 }
 
 h1 {
     color: #825d0e;
     text-align: center;
     font-family: pacifico;
+    z-index: 2;
 }
 
 #status {
     font-size: 10vh;
     padding: 5%;
+    cursor: pointer  
 }
 
 form {
@@ -40,6 +42,21 @@ header button {
 
 header button:hover {
     background-color: grey;
+}
+
+header #back-button, #timer {
+    float: left;
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+header #timer {
+    margin-top: 1.7%;
+    font-family: 'Public Sans', sans-serif;
+}
+
+h1 img {
+    height: 10vh;
 }
 
 .row {
@@ -78,12 +95,14 @@ header button:hover {
 
 footer {
     position: fixed;
-    bottom: 1%;
+    bottom: 0.3%;
     width: 100%;
     font-size: 3vw;
     background-color: #825d0e;
     color: white;
     text-align: center;
+    padding-top: 0.3%;
+    padding-bottom: 0.3%;
 }
 
 #background {

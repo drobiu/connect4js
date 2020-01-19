@@ -1,26 +1,14 @@
 var size = 7;
 
-generateBoard = function () {
+function generateBoard() {
     var result = [];
     for (let i = 0; i < size; i++) {
         result.push([]);
     }
     return result;
-};
+}
 
-var board = generateBoard();
-
-// board = [
-//     ['r'],
-//     ['y', 'r'],
-//     ['y', 'y', 'r'],
-//     ['r', 'y', 'r', 'r'],
-//     [],
-//     [],
-//     []
-// ];
-
-checkBoard = function (board) {
+function checkBoard(board) {
     //checking for horizontal matches
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size - 3; j++) {
@@ -51,8 +39,18 @@ checkBoard = function (board) {
     return false;
 }
 
+function checkFull(board) {
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size - 1; j++) {
+            if (board[i][j] == undefined) return false;
+        }
+    }
+    return true;
+}
+
 var logic = {};
 logic.generateBoard = generateBoard;
 logic.checkBoard = checkBoard;
+logic.checkFull = checkFull;
 
 module.exports = logic;

@@ -11,14 +11,6 @@ html, body {
 	font-family: 'PT Sans', sans-serif;
 }
 
-#background {
-    position: absolute;
-    bottom: 0px;
-    max-width: 100%;
-	right: 0px;
-	z-index: -1;
-}
-
 #title {
 	font-size: 7vw;
 	font-family: pacifico;
@@ -33,12 +25,44 @@ html, body {
 	display: inline;
 }
 
+.block {
+	display: block;
+	/*width: 30%;*/
+	border: none;
+	background-color: white;
+	padding: 4% 10%;
+	cursor: pointer;
+	margin-top: 5%;
+	margin-left: 40%;
+	background: url('/../images/play_button.png');
+	background-size: 100% 100%;
+}
+
+#how-to {
+	font-size: 2vw;
+	font-family: pacifico;
+	text-align: center;
+	color: #825d0e;
+	width: 30%;
+	margin-top: 2%;
+	margin-left: 35%;
+	padding-bottom: 3%;
+	line-height: 120%;
+
+}
+
+/* #how-to h1 {
+	font-size: 3vw;
+	padding-bottom: 3%;
+
+} */
+
 main #stats-1, #stats-2, #stats-3 {
 	font-size: 3vw;
 	font-family: pacifico;
 	text-align: center;
-	color: #A87C29;
-	margin-top: 8%;
+	color: #825d0e;
+	margin-top: 6%;
 	margin-left: 5%;
 	float: left;
 	width: 26.67%;
@@ -50,34 +74,22 @@ main #stats:after {
 	clear: both;
 }
 
-.block {
-	display: block;
-	width: 40%;
-	border: none;
-	background-color: white;
-	padding: 10% 20%;
-	font-size: 3vw;
-	cursor: pointer;
-	text-align: center;
-	margin-top: 5%;
-	margin-left: 30%;
-	background: url('/../images/play_button.png');
-	background-size: 100% 100%;
-}
-
 .block:hover {
 	opacity: 90%;
 	animation: expand ease-in-out 2s infinite alternate;
 }
 
 footer {
+	font-family: 'Public Sans', sans-serif;
     position: fixed;
-    bottom: 1%;
+    bottom: 0.3%;
     width: 100%;
-    font-size: 30px;
-    background-color: #A87C29;
+    font-size: 3vw;
+    background-color: #825d0e;
     color: white;
     text-align: center;
+    padding-top: 0.3%;
+    padding-bottom: 0.3%;
 }
 
 #sun {
@@ -94,6 +106,8 @@ footer {
 }
 
 #cookies {
+	padding-top: 0.3%;
+	padding-left: 0.3%;
 	cursor: pointer;
 }
 

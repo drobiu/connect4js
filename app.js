@@ -4,10 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
-var sessions = require("express-session");
+var sessions = require('express-session');
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+
 
 var bodyParser = require('body-parser');
 var websocket = require('ws');
@@ -61,22 +60,43 @@ router.get("/play", function (req, res) {
 
 app.get("/play", router);
 
-// router.get("/", (req, res) => {
-//     res.render('splash.ejs', {});
-// });
+app.use(cookieParser("C4_cookie"));
+
+var sessionConfig = {
+    secret: "C4_cookie",
+    resave: false,
+    saveUninitialized: true,
+};
+
+app.use(sessions(sessionConfig));
+
 
 app.get("/", (req, res) => {
+    var session = req.session;
+    var cookieMessage;
+    if (session.views) {
+        session.views++;
+        var lv = session.lastVisit;
+        session.lastVisit = new Date().toUTCString();
+        cookieMessage = "You have been here " + session.views + " times (last visit: " + lv + ").";
+    }
+    else {
+        session.views = 1;
+        session.lastVisit = new Date().toUTCString();
+        cookieMessage = "[x] Welcome on our site! This site uses cookies";
+    }
     res.render('splash.ejs', {
         gamesStarted: gameStatus.gamesStarted,
         gamesCompleted: gameStatus.gamesCompleted,
-        totalPlayers: gameStatus.totalPlayers
+        totalPlayers: gameStatus.totalPlayers,
+        cookieMessage: cookieMessage
     });
 });
 
 var server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
-var currentGame = new game(gameStatus.gamesStarted++, generateBoard());
+var currentGame = new game(gameStatus.gamesStarted, generateBoard());
 var conID = 0;
 
 var websockets = {};
@@ -96,16 +116,6 @@ wss.on("connection", function connection(ws) {
         currentGame.id,
         playerType
     );
-
-    function logging(message) {
-        console.log(
-            "code: %s game: %s player: %s %s",
-            message.code,
-            currentGame.id,
-            message.user,
-            playerType
-        )
-    }
 
     if (currentGame.hasTwoConnectedPlayers()) {
         console.log("disable");
@@ -144,9 +154,10 @@ wss.on("connection", function connection(ws) {
 
         if (jmessage.code == 'abort') {
 
-            if (jmessage.user == 'A') {
+            if (currGame.playerB != null) {
                 currGame.playerB.send(JSON.stringify({ code: 'abort' }));
-            } else {
+            }
+            if (currGame.playerA != null) {
                 currGame.playerA.send(JSON.stringify({ code: 'abort' }));
             }
 
@@ -161,6 +172,12 @@ wss.on("connection", function connection(ws) {
             currGame.playerB.send(JSON.stringify(newMessage));
 
             let lastPlayer = currGame.currentPlayer;
+
+            if (logic.checkFull(board)) {
+                currGame.playerA.send(JSON.stringify({ code: 'tie' }));
+                currGame.playerB.send(JSON.stringify({ code: 'tie' }));
+                return;
+            }
 
             if (checkBoard(board)) {
                 if (lastPlayer == currGame.playerA) {
@@ -191,33 +208,9 @@ wss.on("connection", function connection(ws) {
 
 });
 
-app.use(cookieParser("C4_cookie"));
-
-var sessionConfig = {
-    secret: "C4_cookie",
-    resave: false,
-    saveUninitialized: true,
-};
-
-app.use(sessions(sessionConfig));
 
 // ! change port to 3000 !
 http.createServer(app).listen(3001);
-
-app.get("/me", function (req, res) {
-    var session = req.session;
-    if (session.views) {
-        session.views++;
-        var lv = session.lastVisit;
-        session.lastVisit = new Date().toUTCString();
-        res.send("You have been here " + session.views + " times (last visit: " + lv + ").");
-    }
-    else {
-        session.views = 1;
-        session.lastVisit = new Date().toUTCString();
-        res.send("Welcome on our site!");
-    }
-});
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -225,7 +218,7 @@ app.use(function (req, res, next) {
 });
 
 //error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
