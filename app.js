@@ -193,7 +193,7 @@ wss.on("connection", function connection(ws) {
                 return;
 
             } else {
-                // if noone won, change the current player
+                // if no one won, change the current player
                 if (lastPlayer == currGame.playerA) {
                     currGame.currentPlayer = currGame.playerB;
                 } else {
@@ -206,9 +206,6 @@ wss.on("connection", function connection(ws) {
     });
 });
 
-
-// ! change port to 3000 !
-http.createServer(app).listen(3001);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {

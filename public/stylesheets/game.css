@@ -38,20 +38,22 @@ header button {
     margin-left: 1%;
     background: url('/../images/back_button.png');
     background-size: 100% 100%;
+    transition: width 0.5s, height 0.5s, transform 0.5s;
 }
 
 header button:hover {
     background-color: grey;
+    transform: scale(1.2, 1.2);
 }
 
 header #back-button, #timer {
     float: left;
-    margin-left: 1%;
-    margin-top: 1%;
+    margin-left: 1.5%;
+    margin-top: 1.5%;
 }
 
 header #timer {
-    margin-top: 1.7%;
+    margin-top: 2.5%;
     font-family: 'Public Sans', sans-serif;
 }
 
