@@ -6,8 +6,6 @@ var logger = require('morgan');
 var http = require('http');
 var sessions = require('express-session');
 
-
-
 var bodyParser = require('body-parser');
 var websocket = require('ws');
 
@@ -45,9 +43,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// //app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -121,16 +116,18 @@ wss.on("connection", function connection(ws) {
         console.log("disable");
         currentGame.playerB.send(JSON.stringify({ code: 'disable' }));
         currentGame.playerA.send(JSON.stringify({ code: 'enable' }));
+        currentGame.playerB.send(JSON.stringify({ code: 'start' }));
+        currentGame.playerA.send(JSON.stringify({ code: 'start' }));
         currentGame = new game(gameStatus.gamesStarted++, generateBoard());
     }
 
     var newMessage = {};
 
-    if (currentGame.nPlayers == 1) {
+    if (currentGame.nPlayers == 1) { // if there is only one player connected, make it display wait status
         newMessage.code = 'wait';
         console.log('wait');
-        newMessage.board = generateBoard();
-        currentGame.currentPlayer = currentGame.playerA;
+        newMessage.board = generateBoard(); // send empty board
+        currentGame.currentPlayer = currentGame.playerA; // playerA is always the first player
         currentGame.playerA.send(JSON.stringify(newMessage));
     }
 
@@ -153,59 +150,60 @@ wss.on("connection", function connection(ws) {
         }
 
         if (jmessage.code == 'abort') {
-
+            // if any player aborted the game, send abort code to remaining players
             if (currGame.playerB != null) {
                 currGame.playerB.send(JSON.stringify({ code: 'abort' }));
             }
             if (currGame.playerA != null) {
                 currGame.playerA.send(JSON.stringify({ code: 'abort' }));
             }
-
+            // create a new game
             currentGame = new game(gameStatus.gamesStarted++, generateBoard());
         }
 
         if (jmessage.code == 'postDisk') {
             board[jmessage.column].push(jmessage.user);
+            // if a user has made a move, add his peg to the board
             newMessage.data = board;
 
+            // send the updated board to both players
             currGame.playerA.send(JSON.stringify(newMessage));
             currGame.playerB.send(JSON.stringify(newMessage));
 
             let lastPlayer = currGame.currentPlayer;
 
-            if (logic.checkFull(board)) {
-                currGame.playerA.send(JSON.stringify({ code: 'tie' }));
-                currGame.playerB.send(JSON.stringify({ code: 'tie' }));
-                return;
-            }
 
-            if (checkBoard(board)) {
+
+            if (checkBoard(board)) { // check if anyone won
+
+                // send a message to losing player
                 if (lastPlayer == currGame.playerA) {
                     currGame.playerB.send(JSON.stringify({ code: 'lose' }));
                 } else {
                     currGame.playerA.send(JSON.stringify({ code: 'lose' }));
                 }
-                gameStatus.gamesCompleted++;
-                lastPlayer.send(JSON.stringify({ code: 'win' }))
-            } else {
+                gameStatus.gamesCompleted++; // add one to completed games
 
+                lastPlayer.send(JSON.stringify({ code: 'win' })) // send a message to winning player
+
+            } else if (logic.checkFull(board)) { // if the board is full and noone won, send a tie message
+                currGame.playerA.send(JSON.stringify({ code: 'tie' }));
+                currGame.playerB.send(JSON.stringify({ code: 'tie' }));
+                gameStatus.gamesCompleted++;
+                return;
+
+            } else {
+                // if noone won, change the current player
                 if (lastPlayer == currGame.playerA) {
                     currGame.currentPlayer = currGame.playerB;
                 } else {
                     currGame.currentPlayer = currGame.playerA;
                 }
-
+                // enable the current player to make moves
                 currGame.currentPlayer.send(JSON.stringify({ code: 'enable' }));
             }
-
-
-        } else {
-            //connection.send(JSON.stringify(board));
         }
     });
-
-
-
 });
 
 
