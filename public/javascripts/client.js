@@ -85,7 +85,7 @@ function hideAll() { // hiding the board with all its elements
 }
 
 function setup() {
-    var socket = new WebSocket('ws://80.112.185.110:3000');
+    var socket = new WebSocket('ws://localhost:3000');
 
 
     socket.onopen = function () {
