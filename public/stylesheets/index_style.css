@@ -25,18 +25,6 @@ html, body {
 	display: inline;
 }
 
-.block {
-	display: block;
-	/*width: 30%;*/
-	border: none;
-	background-color: white;
-	padding: 4% 10%;
-	cursor: pointer;
-	margin-top: 5%;
-	margin-left: 40%;
-	background: url('/../images/play_button.png');
-	background-size: 100% 100%;
-}
 
 #how-to {
 	font-size: 2vw;
@@ -50,12 +38,6 @@ html, body {
 	line-height: 120%;
 
 }
-
-/* #how-to h1 {
-	font-size: 3vw;
-	padding-bottom: 3%;
-
-} */
 
 main #stats-1, #stats-2, #stats-3 {
 	font-size: 3vw;
@@ -74,9 +56,24 @@ main #stats:after {
 	clear: both;
 }
 
+.block {
+	display: block;
+	border: none;
+	background-color: white;
+	padding: 4% 10%;
+	cursor: pointer;
+	margin-top: 4%;
+	margin-left: 40%;
+	background: url('/../images/play_button.png');
+	background-size: 100% 100%;
+	transition: width 0.5s, height 0.5s, transform 0.5s;
+}
+
 .block:hover {
 	opacity: 90%;
-	animation: expand ease-in-out 2s infinite alternate;
+	/*animation: expand ease-in-out 2s infinite alternate;*/
+	transform: scale(1.2, 1.2);
+
 }
 
 footer {

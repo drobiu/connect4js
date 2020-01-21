@@ -34,7 +34,6 @@ function updateboard(board) {
                 $('#ball' + i + j).css({ 'top': height / 2 - 7 * 30 + (7 - i) * 60 + "px", "left": width / 2 - 7 * 30 + (j * 60) + "px" });
 
                 if (boardRotated[i][j] == 'B') {
-                    //$('#ball' + i + j).css({ 'background': "radial-gradient(yellow, #D1D118)"});
                     $('#ball' + i + j).css({ 'background': "url('../images/lama_p2.png')", 'background-size': '100% 100%' });
 
                 }
@@ -44,7 +43,6 @@ function updateboard(board) {
 
 
     $('#boardBackground').css({ 'top': height / 2 - 118 + 'px', 'left': width / 2 - 236 + 'px' });
-    //$('#boardBackground').css({ 'top': d.height() / 2 - 118 + 'px', 'left': d.width() / 2 - 236 + 'px'});
 
     var leftBase = width / 2 - 216;
     var topBase = height / 2 - 118;
@@ -170,6 +168,8 @@ function setup() {
     }, 1000);
 }
 
+document.cookie = "isCookie=true; expires=Fri, 20-Jan-2021 12:00:00 GMT";
+
 
 
 // When the document is ready:
@@ -185,5 +185,12 @@ $(document).ready(function () {
     // $(document).getElementsByClassName('column').addEventListener('click', function() {console.log('click')});
     // $('.column').click(function () { postDisk(event) });
 
-    window.addEventListener("resize", function () { updateboard(board) }, true);
+    window.addEventListener("resize", function () { 
+        var width = $(window).width();
+        var height = $(window).height(); 
+        if(width < 850  || height < 780) {
+           window.alert("Your window size is smaller than expected, your game experience may suffer!");
+        }
+        updateboard(board)
+    }, true);
 });
