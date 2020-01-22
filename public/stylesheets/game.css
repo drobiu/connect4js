@@ -41,7 +41,7 @@ header button {
     transition: width 0.5s, height 0.5s, transform 0.5s;
 }
 
-header button:hover {
+header button:active {
     background-color: grey;
     transform: scale(1.2, 1.2);
 }
@@ -55,6 +55,10 @@ header #back-button, #timer {
 header #timer {
     margin-top: 2.5%;
     font-family: 'Public Sans', sans-serif;
+}
+
+header #timer::before {
+    content: "Play time: ";
 }
 
 h1 img {

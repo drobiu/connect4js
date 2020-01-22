@@ -164,7 +164,7 @@ function setup() {
     var time = 0;
     setInterval(function () {
         time++;
-        $('#timer').text('Play time: ' + time + ' seconds.');
+        $('#timer').text(time + ' seconds.');
     }, 1000);
 }
 
